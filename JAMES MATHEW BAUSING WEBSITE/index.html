@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matthew Bausing | Portfolio</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/features.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+  <link rel="stylesheet" href="home.css" />
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav>
+  <a href="index.html" class="nav-logo">MB<span>.</span></a>
+
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+
+  <ul class="nav-links" role="list">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="resume.html">Resume</a></li>
+    <li><a href="hobbies.html">Hobbies</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+
+  <div class="nav-search">
+    <input type="text" id="nav-search-input" placeholder="Search pages…" autocomplete="off" />
+    <span class="nav-search-icon">⌕</span>
+    <div class="search-dropdown" id="search-dropdown"></div>
+  </div>
+
+  <button id="dark-mode-toggle" title="Toggle theme">☀️</button>
+  <button id="logout-btn" onclick="logout()">⏻ Logout</button>
+</nav>
+
+<!-- ── Home Hero ── -->
+<div class="page-wrapper">
+
+  <section class="hero">
+    <div class="hero-scanline"></div>
+    <div class="hero-content">
+
+      <div class="hero-tag animate-fade-in-up">
+        <span class="tag">// BS Information Technology</span>
+      </div>
+
+      <h1 class="hero-name animate-fade-in-up delay-1">
+        James Matthew<br><span>L. Bausing</span>
+      </h1>
+
+      <p class="hero-role animate-fade-in-up delay-2">
+        &gt; <span id="typewriter" data-texts='["Front-End Developer", "IT Student", "Gamer &amp; Anime Fan", "Problem Solver"]'>Front-End Developer</span><span class="cursor">_</span>
+      </p>
+
+      <p class="hero-bio animate-fade-in-up delay-3">
+        A passionate BS IT student at <strong>North Eastern Mindanao State University</strong> — Cantilan Campus,
+        building clean and modern web experiences one line at a time.
+      </p>
+
+      <div class="hero-actions animate-fade-in-up delay-4">
+        <a href="about.html"   class="btn btn-filled">About Me</a>
+        <a href="resume.html"  class="btn btn-primary">View Resume</a>
+        <a href="contact.html" class="btn btn-primary">Contact Me</a>
+      </div>
+
+    </div>
+
+    <div class="hero-visual animate-fade-in-up delay-3">
+      <div class="hero-avatar-ring">
+        <div class="hero-avatar-inner">
+          <img src="images/profile.jpg" alt="James Matthew L. Bausing" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+          <div class="avatar-fallback">MB</div>
+        </div>
+      </div>
+      <div class="hero-stat-badge stat-1"><span class="stat-num">5261</span><span class="stat-label">ML Matches</span></div>
+      <div class="hero-stat-badge stat-2"><span class="stat-num">COTE</span><span class="stat-label">Fav Anime</span></div>
+      <div class="hero-stat-badge stat-3"><span class="stat-num">IT</span><span class="stat-label">Major</span></div>
+    </div>
+  </section>
+
+  <!-- ── Quick Stats ── -->
+  <section class="stats-section container reveal">
+    <div class="stats-grid">
+      <div class="stat-card card">
+        <div class="stat-icon">💻</div>
+        <div class="stat-info">
+          <div class="stat-value">HTML / CSS / JS</div>
+          <div class="stat-desc">Core Skills</div>
+        </div>
+      </div>
+      <div class="stat-card card">
+        <div class="stat-icon">🎓</div>
+        <div class="stat-info">
+          <div class="stat-value">NEMSU</div>
+          <div class="stat-desc">Cantilan Campus</div>
+        </div>
+      </div>
+      <div class="stat-card card">
+        <div class="stat-icon">📍</div>
+        <div class="stat-info">
+          <div class="stat-value">Gigaquit, SDN</div>
+          <div class="stat-desc">Surigao del Norte, PH</div>
+        </div>
+      </div>
+      <div class="stat-card card">
+        <div class="stat-icon">🎮</div>
+        <div class="stat-info">
+          <div class="stat-value">Mythical Glory</div>
+          <div class="stat-desc">ML: BB Peak Rank</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── About Snippet ── -->
+  <section class="about-snippet container reveal">
+    <div class="about-text">
+      <div class="cyber-line">
+        <h2 class="section-title">About <span>Me</span></h2>
+      </div>
+      <p class="section-subtitle">// WHO AM I?</p>
+      <p>
+        I'm <strong>James Matthew Bausing</strong>, an IT student with a love for front-end development,
+        online gaming (Mobile Legends: Bang Bang), and binge-watching anime. I believe in learning by doing,
+        and I'm always on the lookout for projects that let me sharpen my skills.
+      </p>
+      <br/>
+      <p>
+        When I'm not coding, you'll find me in the Land of Dawn climbing ranked, or deep in a gripping
+        anime storyline like <em>Classroom of the Elite</em>.
+      </p>
+      <br/>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+        <a href="about.html"   class="btn btn-filled">Full About Page →</a>
+        <a href="resume.html"  class="btn btn-primary">My Resume →</a>
+      </div>
+    </div>
+    <div class="about-skills-preview">
+      <h3 class="skills-preview-title">Quick Skills</h3>
+      <div class="skill-preview-item">
+        <span>HTML5</span>
+        <div class="skill-bar"><div class="skill-bar-fill" data-width="90%"></div></div>
+      </div>
+      <div class="skill-preview-item">
+        <span>CSS3</span>
+        <div class="skill-bar"><div class="skill-bar-fill" data-width="82%"></div></div>
+      </div>
+      <div class="skill-preview-item">
+        <span>JavaScript</span>
+        <div class="skill-bar"><div class="skill-bar-fill" data-width="70%"></div></div>
+      </div>
+      <div class="skill-preview-item">
+        <span>Responsive Design</span>
+        <div class="skill-bar"><div class="skill-bar-fill" data-width="78%"></div></div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end page-wrapper -->
+
+<!-- ── Footer ── -->
+<footer>
+  <p>© 2025 <a href="index.html">James Matthew L. Bausing</a> &nbsp;·&nbsp;
+     BS Information Technology · NEMSU Cantilan &nbsp;·&nbsp;
+     <a href="mailto:jamesmatthewbausing@gmail.com">jamesmatthewbausing@gmail.com</a>
+  </p>
+</footer>
+
+<script src="script.js"></script>
+<script src="js/qr-feature.js"></script>
+</body>
+</html>

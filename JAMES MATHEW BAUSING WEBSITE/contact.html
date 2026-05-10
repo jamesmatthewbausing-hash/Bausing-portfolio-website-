@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact | Matthew Bausing</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/features.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+  <style>
+    /* ── Contact Page Styles ── */
+    .contact-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    /* Info Side */
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .contact-intro {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.85;
+    }
+
+    .contact-intro strong { color: var(--accent-cyan); }
+
+    .contact-detail-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .contact-detail-card:hover {
+      border-color: var(--border-hover);
+      transform: translateX(4px);
+      box-shadow: 0 0 20px rgba(0, 245, 255, 0.1);
+    }
+
+    .contact-detail-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: rgba(0, 245, 255, 0.08);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .contact-detail-info {}
+
+    .contact-detail-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+
+    .contact-detail-value {
+      font-size: 0.92rem;
+      color: var(--text-primary);
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    /* Form Side */
+    .contact-form-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 2rem;
+    }
+
+    .form-title {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 0.7rem 1rem;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      outline: none;
+      transition: var(--transition);
+      resize: none;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 12px rgba(0, 245, 255, 0.15);
+      background: rgba(0, 245, 255, 0.02);
+    }
+
+    .form-group textarea { min-height: 130px; }
+
+    .form-submit {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 0.9rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .form-submit:hover:not(:disabled) {
+      background: rgba(0, 245, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 245, 255, 0.2);
+    }
+
+    .form-submit:disabled {
+      cursor: not-allowed;
+      opacity: 0.8;
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      .contact-wrapper {
+        grid-template-columns: 1fr;
+        padding: 2rem 1rem 4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav>
+  <a href="index.html" class="nav-logo">MB<span>.</span></a>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" role="list">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="resume.html">Resume</a></li>
+    <li><a href="hobbies.html">Hobbies</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-search">
+    <input type="text" id="nav-search-input" placeholder="Search pages…" autocomplete="off" />
+    <span class="nav-search-icon">⌕</span>
+    <div class="search-dropdown" id="search-dropdown"></div>
+  </div>
+  <button id="dark-mode-toggle" title="Toggle theme">☀️</button>
+  <button id="logout-btn" onclick="logout()">⏻ Logout</button>
+</nav>
+
+<div class="page-wrapper">
+
+  <!-- Page Hero -->
+  <div class="page-hero">
+    <h1 class="section-title animate-fade-in-up">Get In <span>Touch</span></h1>
+    <p class="section-subtitle animate-fade-in-up delay-1">// LET'S CONNECT</p>
+  </div>
+
+  <div class="contact-wrapper">
+
+    <!-- ── Info ── -->
+    <div class="contact-info reveal">
+      <p class="contact-intro">
+        I'm always open to new opportunities, collaborations, or just a friendly conversation.
+        Whether you have a question, project idea, or just want to say hi —
+        feel free to <strong>reach out</strong>!
+      </p>
+
+      <a class="contact-detail-card" href="mailto:jamesmatthewbausing@gmail.com">
+        <div class="contact-detail-icon">✉️</div>
+        <div class="contact-detail-info">
+          <div class="contact-detail-label">Email</div>
+          <div class="contact-detail-value">jamesmatthewbausing@gmail.com</div>
+        </div>
+      </a>
+
+      <div class="contact-detail-card" style="cursor:default;">
+        <div class="contact-detail-icon">📍</div>
+        <div class="contact-detail-info">
+          <div class="contact-detail-label">Location</div>
+          <div class="contact-detail-value">Sico-sico, Gigaquit, Surigao del Norte</div>
+        </div>
+      </div>
+
+      <div class="contact-detail-card" style="cursor:default;">
+        <div class="contact-detail-icon">🎓</div>
+        <div class="contact-detail-info">
+          <div class="contact-detail-label">School</div>
+          <div class="contact-detail-value">NEMSU – Cantilan Campus</div>
+        </div>
+      </div>
+
+      <div class="contact-detail-card" style="cursor:default;">
+        <div class="contact-detail-icon">🎮</div>
+        <div class="contact-detail-info">
+          <div class="contact-detail-label">MLBB</div>
+          <div class="contact-detail-value">✦_Matt · ID: 903394920 (10734)</div>
+        </div>
+      </div>
+
+      <a class="contact-detail-card" href="https://www.facebook.com/jamesmatthew.bausing.7" target="_blank" rel="noopener noreferrer">
+        <div class="contact-detail-icon">📘</div>
+        <div class="contact-detail-info">
+          <div class="contact-detail-label">Facebook</div>
+          <div class="contact-detail-value">James Matthew Bausing</div>
+        </div>
+      </a>
+
+      <!-- ── QR Code ── -->
+      <div class="contact-qr-section reveal">
+        <div class="qr-section-label">// Scan My Portfolio</div>
+        <div class="qr-canvas-wrap">
+          <div id="contact-qr-canvas"></div>
+        </div>
+        <p class="qr-contact-tagline">Point your camera to open my portfolio instantly.</p>
+        <button class="qr-dl-btn" onclick="QRFeature.downloadQR('contact-qr-canvas')">⬇ &nbsp;Save QR Code</button>
+      </div>
+
+    </div>
+
+    <!-- ── Form ── -->
+    <div class="contact-form-wrap reveal delay-2">
+      <div class="form-title">// Send a Message</div>
+      <form id="contact-form" novalidate>
+        <div class="form-group">
+          <label for="name">Your Name</label>
+          <input type="text" id="name" name="name" placeholder="e.g. Juan Dela Cruz" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Your Email</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required />
+        </div>
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" name="subject" placeholder="What's this about?" />
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="Write your message here…" required></textarea>
+        </div>
+        <button type="submit" class="form-submit">⟩ Send Message</button>
+      </form>
+    </div>
+
+  </div>
+
+</div><!-- end page-wrapper -->
+
+<footer>
+  <p>© 2025 <a href="index.html">James Matthew L. Bausing</a> &nbsp;·&nbsp;
+     BS Information Technology · NEMSU Cantilan &nbsp;·&nbsp;
+     <a href="mailto:jamesmatthewbausing@gmail.com">jamesmatthewbausing@gmail.com</a>
+  </p>
+</footer>
+
+<script src="script.js"></script>
+<script src="js/qr-feature.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Small delay to ensure QRCode lib is loaded
+    setTimeout(function() {
+      if (typeof QRCode !== 'undefined') {
+        QRFeature.generateQR('contact-qr-canvas', 180);
+      }
+    }, 300);
+  });
+</script>
+</body>
+</html>

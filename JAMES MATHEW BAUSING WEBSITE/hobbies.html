@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hobbies | Matthew Bausing</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/features.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+  <style>
+    /* ── Hobbies Page Styles ── */
+    .hobbies-section {
+      padding: 3rem 2rem 4rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* ── Hobby Block ── */
+    .hobby-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+      margin-bottom: 5rem;
+      padding-bottom: 4rem;
+      border-bottom: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    .hobby-block:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .hobby-block.reversed { direction: rtl; }
+    .hobby-block.reversed > * { direction: ltr; }
+
+    /* Image Side */
+    .hobby-image-wrap {
+      position: relative;
+    }
+
+    .hobby-image-frame {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      aspect-ratio: 16/10;
+      transition: var(--transition);
+    }
+
+    .hobby-image-frame:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 0 30px rgba(0, 245, 255, 0.15);
+    }
+
+    .hobby-image-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .hobby-image-frame:hover img {
+      transform: scale(1.03);
+    }
+
+    /* Corner decoration */
+    .hobby-image-frame::before,
+    .hobby-image-frame::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-color: var(--accent-cyan);
+      border-style: solid;
+      z-index: 2;
+    }
+
+    .hobby-image-frame::before {
+      top: -1px; left: -1px;
+      border-width: 2px 0 0 2px;
+    }
+
+    .hobby-image-frame::after {
+      bottom: -1px; right: -1px;
+      border-width: 0 2px 2px 0;
+    }
+
+    /* Overlay label */
+    .hobby-image-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0.6rem 1rem;
+      background: linear-gradient(transparent, rgba(5,8,16,0.9));
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-cyan);
+      letter-spacing: 1px;
+      z-index: 3;
+    }
+
+    /* Stats under image */
+    .hobby-stats {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .hobby-stat-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+
+    .hobby-stat-pill strong {
+      color: var(--accent-cyan);
+    }
+
+    /* Text Side */
+    .hobby-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      padding-top: 0.5rem;
+    }
+
+    .hobby-number {
+      font-family: var(--font-heading);
+      font-size: 4rem;
+      font-weight: 900;
+      color: rgba(0, 245, 255, 0.08);
+      line-height: 1;
+      letter-spacing: -2px;
+      user-select: none;
+    }
+
+    .hobby-category {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent-cyan);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .hobby-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.3rem, 3vw, 1.9rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: 1px;
+      line-height: 1.2;
+    }
+
+    .hobby-title span { color: var(--accent-cyan); }
+
+    .hobby-desc {
+      font-size: 0.97rem;
+      color: var(--text-secondary);
+      line-height: 1.85;
+    }
+
+    .hobby-desc strong { color: var(--text-primary); }
+    .hobby-desc em { color: var(--accent-cyan); font-style: normal; }
+
+    /* Detail List */
+    .hobby-details {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .hobby-details li {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+    }
+
+    .hobby-details li::before {
+      content: '▸';
+      color: var(--accent-cyan);
+      flex-shrink: 0;
+    }
+
+    .hobby-details li strong { color: var(--text-primary); }
+
+    /* ── Other Interests Grid ── */
+    .other-interests {
+      padding: 3rem 2rem 4rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .interests-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .interest-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      transition: var(--transition);
+      cursor: default;
+    }
+
+    .interest-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0,245,255,0.1);
+    }
+
+    .interest-emoji { font-size: 2rem; display: block; margin-bottom: 0.6rem; }
+
+    .interest-name {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      letter-spacing: 1.5px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .hobby-block,
+      .hobby-block.reversed {
+        grid-template-columns: 1fr;
+        direction: ltr;
+        gap: 1.5rem;
+      }
+
+      .hobby-image-frame { aspect-ratio: 4/3; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav>
+  <a href="index.html" class="nav-logo">MB<span>.</span></a>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" role="list">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="resume.html">Resume</a></li>
+    <li><a href="hobbies.html">Hobbies</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-search">
+    <input type="text" id="nav-search-input" placeholder="Search pages…" autocomplete="off" />
+    <span class="nav-search-icon">⌕</span>
+    <div class="search-dropdown" id="search-dropdown"></div>
+  </div>
+  <button id="dark-mode-toggle" title="Toggle theme">☀️</button>
+  <button id="logout-btn" onclick="logout()">⏻ Logout</button>
+</nav>
+
+<div class="page-wrapper">
+
+  <!-- Page Hero -->
+  <div class="page-hero">
+    <h1 class="section-title animate-fade-in-up">My <span>Hobbies</span></h1>
+    <p class="section-subtitle animate-fade-in-up delay-1">// GAMING · ANIME · MUSIC · AND MORE</p>
+  </div>
+
+  <!-- ═══ HOBBIES ═══ -->
+  <div class="hobbies-section">
+
+    <!-- ── Hobby 1: Mobile Legends ── -->
+    <div class="hobby-block reveal">
+
+      <div class="hobby-image-wrap">
+        <div class="hobby-image-frame">
+          <img
+            src="images/ml_account.png"
+            alt="Mobile Legends Account — ✦_Matt, Mythical Glory, 5261 Matches"
+          />
+          <div class="hobby-image-label">// MLBB · ✦_Matt · ID: 903394920</div>
+        </div>
+
+        <div class="hobby-stats">
+          <span class="hobby-stat-pill">🏆 <strong>Mythical Glory</strong> &nbsp;Peak Rank</span>
+          <span class="hobby-stat-pill">⚔️ <strong>5,261</strong> &nbsp;Matches</span>
+          <span class="hobby-stat-pill">❤️ <strong>2,604</strong> &nbsp;Likes</span>
+          <span class="hobby-stat-pill">⭐ <strong>Star 59</strong> &nbsp;Highest Rank</span>
+        </div>
+      </div>
+
+      <div class="hobby-info">
+        <div class="hobby-number">01</div>
+        <div class="hobby-category">// ONLINE GAMING</div>
+        <h2 class="hobby-title">Mobile Legends:<br><span>Bang Bang</span></h2>
+        <p class="hobby-desc">
+          I'm an avid <strong>MLBB</strong> player known in-game as <em>✦_Matt</em>, proudly
+          representing the <strong>Heaven Exorcist (H.Ë)</strong> guild. With over
+          <strong>5,261 matches</strong> under my belt and a peak rank of
+          <strong>Mythical Glory (Star 59)</strong>, the Land of Dawn is practically my second home.
+        </p>
+        <p class="hobby-desc">
+          I've earned medals including <strong>Epic Comeback</strong>, <strong>Star of the Show</strong>,
+          and <strong>Killing Machine</strong> — proof that I stay competitive and love the thrill
+          of a hard-fought match.
+        </p>
+        <ul class="hobby-details">
+          <li><strong>In-Game Name:</strong> ✦_Matt</li>
+          <li><strong>Guild:</strong> H.Ë Heaven Exorcist</li>
+          <li><strong>Server:</strong> Philippines 🇵🇭</li>
+          <li><strong>Role:</strong> Collector · Expert Collector I</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- ── Hobby 2: Anime ── -->
+    <div class="hobby-block reversed reveal">
+
+      <div class="hobby-image-wrap">
+        <div class="hobby-image-frame">
+          <img
+            src="images/anime_cote.jpg"
+            alt="Classroom of the Elite — Anime Cover"
+          />
+          <div class="hobby-image-label">// CLASSROOM OF THE ELITE · 2017</div>
+        </div>
+
+        <div class="hobby-stats">
+          <span class="hobby-stat-pill">🎌 <strong>Isekai Jouhou</strong> &nbsp;Genre</span>
+          <span class="hobby-stat-pill">⭐ <strong>8.0 / 10</strong> &nbsp;MAL Score</span>
+          <span class="hobby-stat-pill">📚 <strong>3 Seasons</strong> &nbsp;Aired</span>
+        </div>
+      </div>
+
+      <div class="hobby-info">
+        <div class="hobby-number">02</div>
+        <div class="hobby-category">// ANIME</div>
+        <h2 class="hobby-title">Classroom of<br><span>the Elite</span></h2>
+        <p class="hobby-desc">
+          My all-time favorite anime is <em>Classroom of the Elite</em> (ようこそ実力至上主義の教室へ).
+          It follows <strong>Kiyotaka Ayanokoji</strong>, a student who deliberately hides his
+          genius intellect to observe the social dynamics of his hyper-competitive school.
+        </p>
+        <p class="hobby-desc">
+          What draws me to this anime is the <strong>psychological depth</strong>, strategic
+          thinking, and the idea that true intelligence isn't always loud. It resonates with
+          my own belief in working smart and learning continuously.
+        </p>
+        <ul class="hobby-details">
+          <li><strong>Studio:</strong> Lerche</li>
+          <li><strong>Genre:</strong> Drama · Psychological · School</li>
+          <li><strong>Seasons:</strong> 3 (+ OVAs)</li>
+          <li><strong>Why I love it:</strong> Mind games & strategic storytelling</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- ── Hobby 3: Listening to Music ── -->
+    <div class="music-hobby-block reveal">
+
+      <div class="music-hobby-header">
+        <div class="music-hobby-number">03</div>
+        <div class="music-hobby-meta">
+          <div class="music-hobby-category">// LISTENING TO MUSIC</div>
+          <h2 class="music-hobby-title">
+            <span class="music-icon">🎵</span>Listening to <span style="color:#8a56ff;">Music</span>
+          </h2>
+        </div>
+      </div>
+
+      <p class="music-hobby-desc">
+        Music is my <strong style="color:var(--text-primary);">escape and inspiration</strong>. I love sinking into R&B and neo-soul tracks
+        that have a relaxed, soulful vibe — songs that feel like a late-night drive or a quiet afternoon.
+        <em style="color:#8a56ff; font-style:normal;">Daniel Caesar</em> is one of my all-time favorites; his storytelling and
+        warm melodies always hit different. Hit play below and experience my top pick. 🎧
+      </p>
+
+      <!-- ── Music Player ── -->
+      <div id="music-player-card">
+
+        <!-- Decorative blob -->
+        <div style="position:absolute;top:-40px;left:-40px;width:140px;height:140px;
+             background:radial-gradient(circle,rgba(138,86,255,0.1),transparent 70%);
+             pointer-events:none;"></div>
+
+        <!-- Album + Song Info -->
+        <div class="bp-top">
+          <div class="bp-album-art">🎵</div>
+          <div class="bp-song-info">
+            <div class="bp-song-title">Best Part</div>
+            <div class="bp-song-artist">Daniel Caesar ft. H.E.R.</div>
+          </div>
+        </div>
+
+        <!-- Visualizer -->
+        <div class="bp-visualizer">
+          <div class="bp-viz-bar"></div><div class="bp-viz-bar"></div>
+          <div class="bp-viz-bar"></div><div class="bp-viz-bar"></div>
+          <div class="bp-viz-bar"></div><div class="bp-viz-bar"></div>
+          <div class="bp-viz-bar"></div><div class="bp-viz-bar"></div>
+          <div class="bp-viz-bar"></div><div class="bp-viz-bar"></div>
+          <div class="bp-viz-bar"></div><div class="bp-viz-bar"></div>
+          <div class="bp-viz-bar"></div><div class="bp-viz-bar"></div>
+          <div class="bp-viz-bar"></div><div class="bp-viz-bar"></div>
+          <div class="bp-viz-bar"></div><div class="bp-viz-bar"></div>
+          <div class="bp-viz-bar"></div><div class="bp-viz-bar"></div>
+        </div>
+
+        <!-- Progress -->
+        <div class="bp-progress-wrap" id="bp-progress">
+          <div id="bp-progress-fill"></div>
+          <div id="bp-progress-thumb"></div>
+        </div>
+        <div class="bp-time">
+          <span id="bp-current">0:00</span>
+          <span id="bp-duration">0:00</span>
+        </div>
+
+        <!-- Controls -->
+        <div class="bp-controls">
+          <button id="bp-play" aria-label="Play/Pause">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+              <polygon points="5,3 19,12 5,21"/>
+            </svg>
+          </button>
+          <div class="bp-volume-wrap">
+            <span id="bp-vol-icon" title="Mute/Unmute">🔊</span>
+            <input type="range" id="bp-volume" min="0" max="100" value="80" aria-label="Volume" />
+          </div>
+        </div>
+
+        <!-- Hidden audio element -->
+        <audio id="bp-audio" preload="metadata">
+          <source src="music/best-part.mp3" type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+
+      </div><!-- end music-player-card -->
+
+    </div><!-- end music-hobby-block -->
+
+  </div><!-- end hobbies-section -->
+
+  <!-- ── Other Interests ── -->
+  <div class="other-interests">
+    <div style="margin-bottom:2rem;">
+      <h2 class="section-title reveal">Other <span>Interests</span></h2>
+      <p class="section-subtitle reveal">// MORE THINGS I ENJOY</p>
+    </div>
+    <div class="interests-grid">
+      <div class="interest-card reveal">
+        <span class="interest-emoji">🌐</span>
+        <div class="interest-name">Web Dev</div>
+      </div>
+      <div class="interest-card reveal delay-1">
+        <span class="interest-emoji">🎵</span>
+        <div class="interest-name">Music</div>
+      </div>
+      <div class="interest-card reveal delay-2">
+        <span class="interest-emoji">📖</span>
+        <div class="interest-name">Reading</div>
+      </div>
+      <div class="interest-card reveal delay-3">
+        <span class="interest-emoji">🖥️</span>
+        <div class="interest-name">Tech</div>
+      </div>
+      <div class="interest-card reveal delay-4">
+        <span class="interest-emoji">🎬</span>
+        <div class="interest-name">Anime Films</div>
+      </div>
+      <div class="interest-card reveal delay-5">
+        <span class="interest-emoji">📱</span>
+        <div class="interest-name">Mobile Games</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end page-wrapper -->
+
+<footer>
+  <p>© 2025 <a href="index.html">James Matthew L. Bausing</a> &nbsp;·&nbsp;
+     BS Information Technology · NEMSU Cantilan &nbsp;·&nbsp;
+     <a href="mailto:jamesmatthewbausing@gmail.com">jamesmatthewbausing@gmail.com</a>
+  </p>
+</footer>
+
+<script src="script.js"></script>
+<script src="js/music-player.js"></script>
+<script src="js/qr-feature.js"></script>
+</body>
+</html>

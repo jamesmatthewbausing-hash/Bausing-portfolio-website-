@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | Matthew Bausing Portfolio</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/features.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+  <style>
+    /* Login page does NOT guard itself */
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+
+    .login-container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 420px;
+      padding: 1rem;
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-logo-mark {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--accent-cyan);
+      text-shadow: 0 0 30px rgba(0, 245, 255, 0.5);
+      letter-spacing: 4px;
+    }
+
+    .login-logo-mark span { color: var(--text-primary); }
+
+    .login-logo-sub {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 3px;
+      margin-top: 0.25rem;
+    }
+
+    .login-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(0, 245, 255, 0.05);
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    .login-mode-tabs {
+      display: flex;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .login-tab {
+      flex: 1;
+      padding: 0.6rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .login-tab.active {
+      background: var(--accent-cyan);
+      color: var(--bg-primary);
+      font-weight: 700;
+    }
+
+    .login-tab:hover:not(.active) {
+      background: var(--accent-glow);
+      color: var(--accent-cyan);
+    }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .form-title {
+      font-family: var(--font-heading);
+      font-size: 0.8rem;
+      letter-spacing: 3px;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .field {
+      margin-bottom: 1.2rem;
+    }
+
+    .field label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .field input {
+      width: 100%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    [data-theme="light"] .field input {
+      background: rgba(0,0,0,0.03);
+    }
+
+    .field input::placeholder { color: var(--text-muted); }
+
+    .field input:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 14px rgba(0, 245, 255, 0.15);
+    }
+
+    .field-hint {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
+    .login-btn {
+      width: 100%;
+      background: var(--accent-cyan);
+      color: var(--bg-primary);
+      border: none;
+      border-radius: 6px;
+      padding: 0.85rem;
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 0.5rem;
+    }
+
+    .login-btn:hover {
+      opacity: 0.9;
+      box-shadow: 0 0 25px rgba(0, 245, 255, 0.35);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .login-msg {
+      margin-top: 1rem;
+      padding: 0.6rem 0.9rem;
+      border-radius: 5px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      display: none;
+    }
+
+    .login-msg.error {
+      display: block;
+      background: rgba(255, 80, 80, 0.1);
+      border: 1px solid rgba(255, 80, 80, 0.3);
+      color: #ff8080;
+    }
+
+    .login-msg.success {
+      display: block;
+      background: rgba(0, 245, 100, 0.1);
+      border: 1px solid rgba(0, 245, 100, 0.3);
+      color: #00ff88;
+    }
+
+    .password-strength {
+      margin-top: 0.5rem;
+      height: 3px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+
+    .password-strength-bar {
+      height: 100%;
+      width: 0;
+      border-radius: 2px;
+      transition: width 0.3s ease, background 0.3s ease;
+    }
+
+    .strength-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
+    /* Dark mode toggle on login page */
+    .login-theme-toggle {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 100;
+    }
+
+    .login-theme-toggle button {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      width: 40px; height: 40px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-theme-toggle button:hover {
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Theme toggle -->
+  <div class="login-theme-toggle">
+    <button id="dark-mode-toggle" title="Toggle theme">☀️</button>
+  </div>
+
+  <div class="login-container">
+    <div class="login-logo">
+      <div class="login-logo-mark">MB<span>.</span></div>
+      <div class="login-logo-sub">// PORTFOLIO ACCESS</div>
+    </div>
+
+    <div class="login-card">
+      <div class="login-mode-tabs">
+        <button class="login-tab active" id="tab-login" onclick="switchTab('login')">Login</button>
+        <button class="login-tab" id="tab-create" onclick="switchTab('create')">Create Password</button>
+      </div>
+
+      <!-- LOGIN PANEL -->
+      <div class="panel active" id="panel-login">
+        <div class="form-title">// Enter Password</div>
+
+        <div class="field">
+          <label for="login-pass">Password</label>
+          <input type="password" id="login-pass" placeholder="Enter your password" autocomplete="current-password" />
+        </div>
+
+        <button class="login-btn" id="login-submit-btn" onclick="doLogin()">⟩ Enter Portfolio</button>
+        <div class="login-msg" id="login-msg"></div>
+      </div>
+
+      <!-- CREATE PASSWORD PANEL -->
+      <div class="panel" id="panel-create">
+        <div class="form-title">// Create Password</div>
+
+        <div class="field">
+          <label for="new-pass">New Password</label>
+          <input type="password" id="new-pass" placeholder="Choose a strong password" oninput="checkStrength(this.value)" autocomplete="new-password" />
+          <div class="password-strength"><div class="password-strength-bar" id="strength-bar"></div></div>
+          <div class="strength-label" id="strength-label"></div>
+        </div>
+
+        <div class="field">
+          <label for="confirm-pass">Confirm Password</label>
+          <input type="password" id="confirm-pass" placeholder="Repeat your password" autocomplete="new-password" />
+          <div class="field-hint">Must match the password above.</div>
+        </div>
+
+        <button class="login-btn" onclick="createPassword()">⟩ Save Password</button>
+        <div class="login-msg" id="create-msg"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Inline script so login.js works standalone
+    // Apply saved theme
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.body.setAttribute('data-theme', savedTheme);
+    const toggleBtn = document.getElementById('dark-mode-toggle');
+    toggleBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    toggleBtn.addEventListener('click', () => {
+      const cur = document.body.getAttribute('data-theme') || 'dark';
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.body.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      toggleBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+    });
+
+    // If already logged in, redirect home
+    if (localStorage.getItem('mb_logged_in') === 'true') {
+      window.location.href = 'index.html';
+    }
+
+    // Check if a password exists, show the right tab
+    window.addEventListener('DOMContentLoaded', () => {
+      const hasPass = !!localStorage.getItem('mb_password');
+      if (!hasPass) switchTab('create');
+    });
+
+    function switchTab(tab) {
+      document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      document.getElementById('panel-' + tab).classList.add('active');
+    }
+
+    function showMsg(id, type, text) {
+      const el = document.getElementById(id);
+      el.className = 'login-msg ' + type;
+      el.textContent = text;
+    }
+
+    function checkStrength(val) {
+      const bar = document.getElementById('strength-bar');
+      const label = document.getElementById('strength-label');
+      let score = 0;
+      if (val.length >= 6) score++;
+      if (val.length >= 10) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+
+      const levels = ['', 'Weak', 'Fair', 'Good', 'Strong', 'Very Strong'];
+      const colors = ['', '#ff4444', '#ff9800', '#ffd700', '#00e676', '#00f5ff'];
+      const widths = ['0%', '20%', '40%', '60%', '80%', '100%'];
+
+      bar.style.width = widths[score] || '0%';
+      bar.style.background = colors[score] || 'transparent';
+      label.textContent = val.length > 0 ? (levels[score] || '') : '';
+    }
+
+    function createPassword() {
+      const np = document.getElementById('new-pass').value;
+      const cp = document.getElementById('confirm-pass').value;
+
+      if (np.length < 6) { showMsg('create-msg', 'error', '✗ Password must be at least 6 characters.'); return; }
+      if (np !== cp)      { showMsg('create-msg', 'error', '✗ Passwords do not match.'); return; }
+
+      localStorage.setItem('mb_password', btoa(np));
+      showMsg('create-msg', 'success', '✓ Password saved! You can now log in.');
+      document.getElementById('new-pass').value = '';
+      document.getElementById('confirm-pass').value = '';
+      document.getElementById('strength-bar').style.width = '0';
+      document.getElementById('strength-label').textContent = '';
+      setTimeout(() => switchTab('login'), 1500);
+    }
+
+    function doLogin() {
+      const pass = document.getElementById('login-pass').value;
+      const stored = localStorage.getItem('mb_password');
+
+      if (!stored) {
+        showMsg('login-msg', 'error', '✗ No password set. Please create one first.');
+        switchTab('create');
+        return;
+      }
+
+      if (btoa(pass) === stored) {
+        localStorage.setItem('mb_logged_in', 'true');
+        showMsg('login-msg', 'success', '✓ Access granted! Redirecting...');
+        setTimeout(() => window.location.href = 'index.html', 1000);
+      } else {
+        showMsg('login-msg', 'error', '✗ Incorrect password. Please try again.');
+        document.getElementById('login-pass').value = '';
+      }
+    }
+
+    // Enter key support
+    document.getElementById('login-pass').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doLogin();
+    });
+  </script>
+</body>
+</html>

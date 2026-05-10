@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume | Matthew Bausing</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/features.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+  <style>
+    /* ── Resume Page Styles ── */
+    .resume-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 2rem;
+      padding: 3rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    /* ── Sidebar ── */
+    .resume-sidebar {
+      position: sticky;
+      top: calc(var(--nav-height) + 2rem);
+    }
+
+    .sidebar-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 2px solid var(--accent-cyan);
+      box-shadow: 0 0 20px rgba(0,245,255,0.25);
+      background: var(--bg-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      margin: 0 auto 1.5rem;
+      overflow: hidden;
+    }
+
+    .sidebar-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .sidebar-name {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-align: center;
+      letter-spacing: 1px;
+      margin-bottom: 0.3rem;
+    }
+
+    .sidebar-role {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-cyan);
+      text-align: center;
+      letter-spacing: 1px;
+      margin-bottom: 1.5rem;
+    }
+
+    .sidebar-section {
+      margin-bottom: 2rem;
+    }
+
+    .sidebar-section-title {
+      font-family: var(--font-heading);
+      font-size: 0.65rem;
+      letter-spacing: 3px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      margin-bottom: 0.8rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .contact-item-icon {
+      flex-shrink: 0;
+      font-size: 0.9rem;
+      margin-top: 0.1rem;
+    }
+
+    .contact-item a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .contact-item a:hover { text-decoration: underline; }
+
+    /* Tech Tags */
+    .skills-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .skill-tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 3px;
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.03);
+      transition: var(--transition);
+      letter-spacing: 0.5px;
+    }
+
+    .skill-tag:hover {
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      background: var(--accent-glow);
+    }
+
+    /* ── Main Content ── */
+    .resume-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .resume-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.8rem;
+      transition: var(--transition);
+    }
+
+    .resume-section:hover {
+      border-color: var(--border-hover);
+    }
+
+    .resume-section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .resume-section-icon {
+      font-size: 1.2rem;
+    }
+
+    .resume-section-title {
+      font-family: var(--font-heading);
+      font-size: 0.8rem;
+      letter-spacing: 3px;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+    }
+
+    /* Objective */
+    .objective-text {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.85;
+      border-left: 3px solid var(--accent-cyan);
+      padding-left: 1.2rem;
+      font-style: italic;
+    }
+
+    /* Skills Grid */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1rem;
+    }
+
+    .skill-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .skill-name {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .skill-pct {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-cyan);
+    }
+
+    .skill-bar {
+      height: 4px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .skill-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+      border-radius: 2px;
+      width: 0;
+      transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 8px rgba(0,245,255,0.4);
+    }
+
+    /* Soft Skills */
+    .soft-skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .soft-skill {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 0.4rem 0.8rem;
+    }
+
+    .soft-skill::before {
+      content: '▹';
+      color: var(--accent-cyan);
+      font-size: 0.75rem;
+    }
+
+    /* Experience */
+    .exp-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .exp-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(0,245,255,0.08);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .exp-content { flex: 1; }
+
+    .exp-title {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.2rem;
+    }
+
+    .exp-org {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--accent-cyan);
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    .exp-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* Education */
+    .edu-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .edu-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .edu-degree {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.2rem;
+    }
+
+    .edu-school {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--accent-cyan);
+      letter-spacing: 1px;
+      margin-bottom: 0.4rem;
+    }
+
+    .edu-campus {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .edu-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.75rem;
+      color: #22c55e;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.25);
+      border-radius: 3px;
+      padding: 0.15rem 0.5rem;
+      font-family: var(--font-mono);
+    }
+
+    .edu-status::before { content: '●'; font-size: 0.5rem; }
+
+    /* Print / Download */
+    .resume-print-btn {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 1rem;
+    }
+
+    @media print {
+      nav, footer, .resume-print-btn { display: none; }
+      .resume-layout { grid-template-columns: 220px 1fr; gap: 1rem; }
+      body { background: white; color: black; }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .resume-layout {
+        grid-template-columns: 1fr;
+        padding: 2rem 1rem;
+      }
+
+      .resume-sidebar { position: static; }
+      .skills-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav>
+  <a href="index.html" class="nav-logo">MB<span>.</span></a>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" role="list">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="resume.html">Resume</a></li>
+    <li><a href="hobbies.html">Hobbies</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-search">
+    <input type="text" id="nav-search-input" placeholder="Search pages…" autocomplete="off" />
+    <span class="nav-search-icon">⌕</span>
+    <div class="search-dropdown" id="search-dropdown"></div>
+  </div>
+  <button id="dark-mode-toggle" title="Toggle theme">☀️</button>
+  <button id="logout-btn" onclick="logout()">⏻ Logout</button>
+</nav>
+
+<div class="page-wrapper">
+
+  <!-- Page Hero -->
+  <div class="page-hero">
+    <h1 class="section-title animate-fade-in-up">My <span>Resume</span></h1>
+    <p class="section-subtitle animate-fade-in-up delay-1">// JAMES MATTHEW L. BAUSING</p>
+  </div>
+
+  <!-- Print Button -->
+  <div class="container resume-print-btn">
+    <button class="btn btn-primary" onclick="window.print()">🖨 Print / Save PDF</button>
+  </div>
+
+  <div class="resume-layout">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="resume-sidebar reveal">
+
+      <div class="card" style="padding:1.5rem;">
+        <div class="sidebar-avatar">MB</div>
+        <div class="sidebar-name">James Matthew L. Bausing</div>
+        <div class="sidebar-role">// IT Student</div>
+
+        <!-- Contact -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Contact</div>
+          <div class="contact-item">
+            <span class="contact-item-icon">📍</span>
+            <span>Sico-sico, Gigaquit, Surigao del Norte</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-item-icon">✉️</span>
+            <a href="mailto:jamesmatthewbausing@gmail.com">jamesmatthewbausing@gmail.com</a>
+          </div>
+        </div>
+
+        <!-- Tech Skills Tags -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Technologies</div>
+          <div class="skills-tags">
+            <span class="skill-tag">HTML5</span>
+            <span class="skill-tag">CSS3</span>
+            <span class="skill-tag">JavaScript</span>
+            <span class="skill-tag">Responsive</span>
+            <span class="skill-tag">Git</span>
+            <span class="skill-tag">VS Code</span>
+          </div>
+        </div>
+
+        <!-- Language -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Languages</div>
+          <div class="contact-item">
+            <span class="contact-item-icon">🗣</span>
+            <span>Filipino &nbsp;·&nbsp; English</span>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <main class="resume-main">
+
+      <!-- Objective -->
+      <div class="resume-section reveal">
+        <div class="resume-section-header">
+          <span class="resume-section-icon">🎯</span>
+          <span class="resume-section-title">Objective</span>
+        </div>
+        <p class="objective-text">
+          A motivated BS Information Technology student seeking opportunities to apply and improve
+          web development skills, especially in front-end development. Committed to continuous learning
+          and delivering clean, functional, and user-friendly digital experiences.
+        </p>
+      </div>
+
+      <!-- Technical Skills -->
+      <div class="resume-section reveal">
+        <div class="resume-section-header">
+          <span class="resume-section-icon">⚙️</span>
+          <span class="resume-section-title">Technical Skills</span>
+        </div>
+        <div class="skills-grid">
+          <div class="skill-item">
+            <div class="skill-name"><span>HTML5</span><span class="skill-pct">90%</span></div>
+            <div class="skill-bar"><div class="skill-bar-fill" data-width="90%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name"><span>CSS3</span><span class="skill-pct">82%</span></div>
+            <div class="skill-bar"><div class="skill-bar-fill" data-width="82%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name"><span>JavaScript</span><span class="skill-pct">70%</span></div>
+            <div class="skill-bar"><div class="skill-bar-fill" data-width="70%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name"><span>Responsive Design</span><span class="skill-pct">78%</span></div>
+            <div class="skill-bar"><div class="skill-bar-fill" data-width="78%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Soft Skills -->
+      <div class="resume-section reveal">
+        <div class="resume-section-header">
+          <span class="resume-section-icon">🌟</span>
+          <span class="resume-section-title">Soft Skills</span>
+        </div>
+        <div class="soft-skills-list">
+          <span class="soft-skill">Problem-Solving</span>
+          <span class="soft-skill">Willingness to Learn</span>
+          <span class="soft-skill">Team Collaboration</span>
+          <span class="soft-skill">Attention to Detail</span>
+          <span class="soft-skill">Time Management</span>
+          <span class="soft-skill">Communication</span>
+          <span class="soft-skill">Adaptability</span>
+        </div>
+      </div>
+
+      <!-- Experience -->
+      <div class="resume-section reveal">
+        <div class="resume-section-header">
+          <span class="resume-section-icon">💼</span>
+          <span class="resume-section-title">Experience</span>
+        </div>
+        <div class="exp-item">
+          <div class="exp-icon-wrap">🚀</div>
+          <div class="exp-content">
+            <div class="exp-title">Aspiring Front-End Developer</div>
+            <div class="exp-org">// SELF-INITIATED PROJECTS · 2024 – PRESENT</div>
+            <div class="exp-desc">
+              No formal professional experience yet. Actively building personal projects and portfolio
+              websites to develop practical web development skills and gain real-world experience.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Education -->
+      <div class="resume-section reveal">
+        <div class="resume-section-header">
+          <span class="resume-section-icon">🎓</span>
+          <span class="resume-section-title">Education</span>
+        </div>
+        <div class="edu-item">
+          <div class="edu-badge">🏫</div>
+          <div>
+            <div class="edu-degree">Bachelor of Science in Information Technology</div>
+            <div class="edu-school">// NORTH EASTERN MINDANAO STATE UNIVERSITY</div>
+            <div class="edu-campus">Cantilan Campus · Cantilan, Surigao del Norte</div>
+            <span class="edu-status">Currently Enrolled</span>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div><!-- end resume-layout -->
+
+</div><!-- end page-wrapper -->
+
+<footer>
+  <p>© 2025 <a href="index.html">James Matthew L. Bausing</a> &nbsp;·&nbsp;
+     BS Information Technology · NEMSU Cantilan &nbsp;·&nbsp;
+     <a href="mailto:jamesmatthewbausing@gmail.com">jamesmatthewbausing@gmail.com</a>
+  </p>
+</footer>
+
+<script src="script.js"></script>
+<script src="js/qr-feature.js"></script>
+</body>
+</html>
